@@ -6,6 +6,13 @@
   "url": "/",
   "enableServer": true,
   "enableNativeAPI": true,
+  "enableExtensions": true,
+  "extensions": [
+    {
+      "id": "js.neutralino.aksampleext",
+      "command": "node ${NL_PATH}/extensions/sample.js"
+    }
+  ],
   "nativeAllowList": [
     "app.*",
     "filesystem.readDirectory"

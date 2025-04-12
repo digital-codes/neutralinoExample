@@ -1,0 +1,17 @@
+{
+  "name": "extensions",
+  "version": "1.0.0",
+  "description": "To start a process in WSL2 (Windows Subsystem for Linux 2) from Windows, you can use the wsl command from PowerShell or Command Prompt. Here's how you can do it, step by step. ✅ Basic Syntax",
+  "main": "pingPong.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "uuid": "^11.1.0",
+    "websocket": "^1.0.35"
+  }
+}
