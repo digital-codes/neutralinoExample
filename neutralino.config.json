@@ -1,0 +1,39 @@
+{
+  "applicationId": "js.neutralino.zero",
+  "version": "1.0.0",
+  "defaultMode": "window",
+  "documentRoot": "/vue-src/dist/",
+  "url": "/",
+  "enableServer": true,
+  "enableNativeAPI": true,
+  "nativeAllowList": [
+    "app.*",
+    "filesystem.readDirectory"
+  ],
+  "modes": {
+    "window": {
+      "title": "vue",
+      "width": 800,
+      "height": 500,
+      "minWidth": 400,
+      "minHeight": 300,
+      "icon": "/vue-src/public/vite.svg"
+    }
+  },
+  "cli": {
+    "binaryName": "vue",
+    "resourcesPath": "/vue-src/dist/",
+    "extensionsPath": "/extensions/",
+    "binaryVersion": "6.0.0",
+    "clientVersion": "6.0.0",
+    "frontendLibrary": {
+      "patchFile": "/vue-src/index.html",
+      "devUrl": "http://localhost:5173",
+      "projectPath": "/vue-src/",
+      "initCommand": "npm install",
+      "devCommand": "npm run dev",
+      "buildCommand": "npm run build",
+      "waitTimeout": 20000
+    }
+  }
+}
