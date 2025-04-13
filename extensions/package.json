@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "chalk": "^5.4.1",
     "uuid": "^11.1.0",
     "websocket": "^1.0.35"
   }

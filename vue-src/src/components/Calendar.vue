@@ -1,5 +1,7 @@
 <template>
   <div class="calendar">
+    <img src="/vite.svg" alt="Calendar" style="width:50px;"/>
+    <img :src="vueimage" style="width:50px;"/>
     <div class="month-grid">
       <div
         v-for="day in generatedMonthDays"
@@ -34,6 +36,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+
+import vueimage from "../assets/vue.svg"
 
 interface Task {
   id: number;

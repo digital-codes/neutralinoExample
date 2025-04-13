@@ -2,7 +2,6 @@ const fs = require('fs');
 const process = require('process');
 const WS = require('websocket').w3cwebsocket;
 const { v4: uuidv4 } = require('uuid');
-const chalk = require('chalk');
 
 // Obtain required params to start a WS connection from stdIn.
 const processInput = JSON.parse(fs.readFileSync(process.stdin.fd, 'utf-8'));
@@ -42,8 +41,6 @@ client.onmessage = (e) => {
 };
 
 function log(message, type = "INFO") {
-  const logLine = `[${NL_EXTID}]: ${chalk[
-    type === "INFO" ? "green" : "red"
-  ](type)} ${message}`;
+  const logLine = `[${NL_EXTID}]: ${message}`;
   console[type === "INFO" ? "log" : "error"](logLine);
 }
