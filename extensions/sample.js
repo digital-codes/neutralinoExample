@@ -9,13 +9,13 @@ const NL_PORT = processInput.nlPort;
 const NL_TOKEN = processInput.nlToken;
 const NL_CTOKEN = processInput.nlConnectToken;
 const NL_EXTID = processInput.nlExtensionId;
-console.log(`NL_PORT: ${NL_PORT}`);
-console.log(`NL_TOKEN: ${NL_TOKEN}`);
-console.log(`NL_CTOKEN: ${NL_CTOKEN}`);
-console.log(`NL_EXTID: ${NL_EXTID}`);
+console.log(`EXT: NL_PORT: ${NL_PORT}`);
+console.log(`EXT: NL_TOKEN: ${NL_TOKEN}`);
+console.log(`EXT: NL_CTOKEN: ${NL_CTOKEN}`);
+console.log(`EXT: NL_EXTID: ${NL_EXTID}`);
 
 const url = `ws://localhost:${NL_PORT}?extensionId=${NL_EXTID}&connectToken=${NL_CTOKEN}`;
-console.log(`Connecting to ${url}`);
+console.log(`EXT: Connecting to ${url}`);
 
 const client = new WS(url)
 
@@ -25,7 +25,12 @@ client.onclose = () => process.exit();
 
 client.onmessage = (e) => {
   const { event, data } = JSON.parse(e.data);
-
+  console.log("EXT: Received event:", event);
+  console.log("EXT: Received data:", data);
+  if (event === "app.broadcast") {
+    log("EXT: Received broadcast event from app");
+    log(data);
+  }
   if (event === "eventToExtension") {
     log(data);
 
@@ -41,6 +46,6 @@ client.onmessage = (e) => {
 };
 
 function log(message, type = "INFO") {
-  const logLine = `[${NL_EXTID}]: ${message}`;
+  const logLine = `EXT: [${NL_EXTID}]: ${message}`;
   console[type === "INFO" ? "log" : "error"](logLine);
 }
