@@ -1,3 +1,5 @@
+// see https://github.com/neutralinojs/neutralinojs/tree/main/bin/extensions/sampleextension
+
 const fs = require('fs');
 const process = require('process');
 const WS = require('websocket').w3cwebsocket;
@@ -19,19 +21,35 @@ console.log(`EXT: Connecting to ${url}`);
 
 const client = new WS(url)
 
-client.onerror = () => log("Connection error!", "ERROR");
-client.onopen = () => log("Connected");
-client.onclose = () => process.exit();
+
+client.onerror = () =>  {
+  log('Connection error!', 'ERROR');
+};
+
+client.onopen = () =>  {
+  log('Connected');
+};
+
+client.onclose = () =>  {
+  log('Connection closed');
+  // Make sure to exit the extension process when WS extension is closed (when Neutralino app exits)
+  process.exit();
+};
 
 client.onmessage = (e) => {
+  if (typeof e.data !== 'string') {
+    log('Invalid message received');
+    return;
+  }
   const { event, data } = JSON.parse(e.data);
-  console.log("EXT: Received event:", event);
-  console.log("EXT: Received data:", data);
+  console.log("EXT: Received event_",event,data);
+  console.log(data);
   if (event === "app.broadcast") {
     log("EXT: Received broadcast event from app");
     log(data);
   }
   if (event === "eventToExtension") {
+    log("EXT: Received eventToExtension event from app");
     log(data);
 
     client.send(
