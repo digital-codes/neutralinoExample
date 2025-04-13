@@ -25,3 +25,5 @@ when stopping neu cli with CRTL-C, patch is not reverted. Stop beu with "q <ente
 
 **NB**: in dev mode with %PUBLIC_URL% present, gui will show error. Right click window to reload, then no error.
 
+use tools/checkPatch before running "neu build"
+
