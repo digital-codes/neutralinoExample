@@ -11,6 +11,15 @@ run with  --window-enable-inspector
 or in config:
 modes.window.enableInspector: boolean
 
+in dev mode like
+
+neu run dev -- --window-enable-inspector
+
+# Build 
+
+build with *neu build --release* 
+
+
 # Git
 make sure to install @neutralinojs/neu globally first, then run *neu update* to 
 download the plattform binaries

@@ -15,7 +15,11 @@
   ],
   "nativeAllowList": [
     "app.*",
-    "filesystem.readDirectory"
+    "filesystem.readDirectory",
+    "os.getEnvs",
+    "os.getEnv",
+    "os.execCommand",
+    "storage.*"
   ],
   "modes": {
     "window": {

@@ -5,19 +5,38 @@ import HelloWorld from './components/HelloWorld.vue'
 import Calendar from "./components/Calendar.vue"
 
 // Import filesystem namespace
-import { filesystem } from "@neutralinojs/lib"
+import { filesystem, os, app } from "@neutralinojs/lib"
 import { onMounted, ref } from 'vue';  
 
 const msg = ref("123")
 
-onMounted(() => {
-  filesystem.readDirectory('./').then((data) => {
-      console.log("Files:",data)
-      msg.value = "Files read successfully"
-    }).catch((err) => {
-      console.log("Error:",err)
-      msg.value = "Error reading files"
-    })
+onMounted(async () => {
+  msg.value = "Mounted. Globals: " + window.NL_OS + " " + window.NL_ARCH + " " + window.NL_ARGS + " " + window.NL_CWD
+  try {
+    const config = await app.getConfig()
+    console.log("App config:",config)
+    msg.value += " //Config: " + JSON.stringify(config)
+  } catch (error) {
+    msg.value += "Error reading config"
+    console.error("Error:", error);
+  }
+  try {
+    const files = await filesystem.readDirectory('./')
+    console.log("Files:",files)
+    msg.value += " //Files read successfully" + JSON.stringify(files)
+  } catch (error) {
+    msg.value += "Error reading files"
+    console.error("Error:", error);
+  }
+  try {
+    const envs = await os.getEnvs();
+    console.log(envs);
+    msg.value += " //ENV: " + JSON.stringify(envs)
+  } catch (error) {
+    console.error("Error:", error);
+    msg.value += error
+  }
+
 });
 
 
