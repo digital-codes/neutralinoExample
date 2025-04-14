@@ -5,7 +5,7 @@
 #include <boost/asio/strand.hpp>
 #include <boost/config.hpp>
 #include <boost/program_options.hpp>
-#include <json/json.h>
+#include <boost/json.hpp>
 
 #include <cstdlib>
 #include <iostream>
@@ -22,6 +22,7 @@ namespace po = boost::program_options;
 namespace beast = boost::beast;
 namespace http = beast::http;
 namespace net = boost::asio;
+namespace json = boost::json;
 using tcp = net::ip::tcp;
 
 struct Task
@@ -31,74 +32,70 @@ struct Task
 };
 
 std::map<std::string, std::vector<Task>> calendar_db;
+
 int next_id = 1;
 
 std::string serializeMonth()
 {
-    Json::Value days(Json::arrayValue);
+    json::array days;
     for (const auto &[date, tasks] : calendar_db)
     {
-        Json::Value day;
+        json::object day;
         day["date"] = date;
+        json::array taskArray;
         for (const auto &task : tasks)
         {
-            Json::Value t;
+            json::object t;
             t["id"] = task.id;
             t["text"] = task.text;
-            day["tasks"].append(t);
+            taskArray.push_back(t);
         }
-        days.append(day);
+        day["tasks"] = taskArray;
+        days.push_back(day);
     }
-    Json::Value result;
+    json::object result;
     result["days"] = days;
-    Json::StreamWriterBuilder writer;
-    return Json::writeString(writer, result);
+    return json::serialize(result);
 }
 
 std::string addTask(const std::string &body)
 {
-    Json::CharReaderBuilder reader;
-    Json::Value data;
-    std::string errs;
-    std::istringstream s(body);
-    std::string date, text;
-
-    if (Json::parseFromStream(reader, s, &data, &errs))
+    json::error_code ec;
+    json::value data = json::parse(body, ec);
+    if (ec)
     {
-        date = data["date"].asString();
-        text = data["text"].asString();
-        Task task{next_id++, text};
-        calendar_db[date].push_back(task);
-
-        Json::Value result;
-        result["id"] = task.id;
-        result["text"] = task.text;
-        Json::StreamWriterBuilder writer;
-        return Json::writeString(writer, result);
+        return "{}";
     }
-    return "{}";
+
+    std::string date = json::value_to<std::string>(data.at("date"));
+    std::string text = json::value_to<std::string>(data.at("text"));
+    Task task{next_id++, text};
+    calendar_db[date].push_back(task);
+
+    json::object result;
+    result["id"] = task.id;
+    result["text"] = task.text;
+    return json::serialize(result);
 }
 
 std::string updateTask(int id, const std::string &body)
 {
-    Json::CharReaderBuilder reader;
-    Json::Value data;
-    std::string errs;
-    std::istringstream s(body);
-
-    if (Json::parseFromStream(reader, s, &data, &errs))
+    json::error_code ec;
+    json::value data = json::parse(body, ec);
+    if (ec)
     {
-        std::string date = data["date"].asString();
-        std::string newText = data["text"].asString();
-        for (auto &task : calendar_db[date])
+        return "Failed";
+    }
+
+    std::string date = json::value_to<std::string>(data.at("date"));
+    std::string newText = json::value_to<std::string>(data.at("text"));
+    for (auto &task : calendar_db[date])
+    {
+        if (task.id == id)
         {
-            if (task.id == id)
-            {
-                task.text = newText;
-                break;
-            }
+            task.text = newText;
+            return "OK";
         }
-        return "OK";
     }
     return "Failed";
 }
@@ -114,6 +111,7 @@ std::string deleteTask(int id)
     }
     return "OK";
 }
+
 
 void handle_request(http::request<http::string_body> req,
                     http::response<http::string_body> &res)

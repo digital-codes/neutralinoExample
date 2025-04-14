@@ -1,6 +1,6 @@
 CXX = g++
 CXXFLAGS = -std=c++17 -O2
-LDFLAGS = -lboost_system -ljsoncpp -lpthread -lboost_program_options
+LDFLAGS = -lboost_system -lpthread -lboost_program_options -lboost_json
 
 all: calendar_boost
 
